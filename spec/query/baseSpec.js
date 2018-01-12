@@ -24,7 +24,14 @@
 
 'use strict';
 
-const factory = require('@rduk/provider');
-const BaseDataProvider = require('./base');
+const errors = require('@rduk/errors');
+const Base = require('../../lib/query/base');
 
-module.exports = factory('data', BaseDataProvider);
+describe('query base class execute method', function() {
+    it('should throw a NotImplementedError', function() {
+        let query = new Base();
+        expect(function() {
+            query.execute();
+        }).toThrowError(errors.NotImplementedError);
+    });
+});

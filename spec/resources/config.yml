@@ -1,0 +1,7 @@
+---
+data:
+    default: test
+    providers:
+        -
+            name: test
+            type: ~/spec/helpers/mock

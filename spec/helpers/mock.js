@@ -24,7 +24,15 @@
 
 'use strict';
 
-const factory = require('@rduk/provider');
-const BaseDataProvider = require('./base');
+const BaseDataProvider = require('../../lib/base');
 
-module.exports = factory('data', BaseDataProvider);
+class MockDataProvider extends BaseDataProvider {
+    constructor(config, section) {
+        super(config, section);
+    }
+    execute(command, parameters) {
+
+    }
+}
+
+module.exports = BaseDataProvider;

@@ -2,10 +2,25 @@
   "name": "@rduk/data",
   "version": "0.0.1",
   "description": "Data layer abstraction",
+  "engines": {
+    "node": ">=6.4.0"
+  },
   "main": "lib/index.js",
   "scripts": {
-    "test": "istanbul cover jasmine"
+    "pretest": "cp ./spec/resources/*yml .",
+    "test": "istanbul cover jasmine --report cobertura",
+    "posttest": "rm *yml",
+    "report": "istanbul report",
+    "coveralls": "npm run report && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rd-uk/rduk-data.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rd-uk/rduk-data/issues"
+  },
+  "homepage": "https://github.com/rd-uk/rduk-data#readme",
   "keywords": [
     "rduk",
     "data",
@@ -14,10 +29,11 @@
   "author": "RDUK <tech@rduk.fr>",
   "license": "MIT",
   "dependencies": {
-    "@rduk/configuration": "2.0.2",
+    "@rduk/configuration": "2.1.1",
     "@rduk/errors": "1.3.0",
-    "@rduk/logger": "0.1.4",
-    "@rduk/provider": "2.0.2"
+    "@rduk/expression": "0.1.1",
+    "@rduk/logger": "0.1.5",
+    "@rduk/provider": "3.0.1"
   },
   "devDependencies": {
     "coveralls": "3.0.0",
