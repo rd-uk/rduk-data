@@ -28,7 +28,9 @@ describe('data', function() {
 
     const Queryable = require('../lib/queryable');
     const TableExpression = require('../lib/sql/expression/table');
-    const QueryProvider = require('../lib/sql/query');
+    const QueryProvider = require('../lib/query/default');
+    const visitor = require('../lib/sql/expression/visitor');
+    const translator = require('../lib/sql/translator');
     const errors = require('@rduk/errors');
 
     let users, profiles;
@@ -39,7 +41,7 @@ describe('data', function() {
     });
 
     it('sql generation should success', function() {
-        let provider = new QueryProvider();
+        let provider = new QueryProvider(visitor, translator);
 
         let q0 = users
         let command = provider.getCommand(q0.expression, {});
