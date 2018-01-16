@@ -9,18 +9,18 @@ thanks to a DataProvider
 
 __Warning__: not prod ready.
 
-# QueryProvider
+## QueryProvider
 
-## Implementations
+### Implementations
 
-### SqlQueryProvider
+#### SqlQueryProvider
 
 ```js
 const Queryable = require('@rduk/data/lib/queryable');
-const TableExpression = require('@rduk/data/lib/sql/expression/table');
+const SourceExpression = require('@rduk/data/lib/expression/source');
 
-let users = new Queryable(new TableExpression('my_db_users'));
-let profiles = new Queryable(new TableExpression('my_db_profiles'));
+let users = new Queryable(new SourceExpression('my_db_users'));
+let profiles = new Queryable(new SourceExpression('my_db_profiles'));
 
 let query = users
     .join(profiles, (u, p) => (u.id === p.user_id))
@@ -46,12 +46,21 @@ query.toArray({
  * FROM my_db_users t0
  * INNER JOIN my_db_profiles t1 ON t0.id = t1.user_id
  * WHERE
- *  (1 && (t0.`email` LIKE '%?' AND UPPER(t1.`country`) = 'FRANCE'))
+ *  (1 AND (t0.`email` LIKE ? AND UPPER(t1.`country`) = 'FRANCE'))
+ *
+ * Parameters
+ * { search: '%@rduk.fr' }
  */
 ```
 
-# DataProvider
+## DataProvider
 
-## Implementations
+### Implementations
 
-work in progress
+- [SQLite](https://github.com/rd-uk/rduk-data-sqlite) (wip)
+- [PostgreSQL](https://github.com/rd-uk/rduk-data-pg) (wip)
+- [MySQL](https://github.com/rd-uk/rduk-data-mysql) (wip)
+
+## License
+
+See [`LICENSE`](LICENSE) file
