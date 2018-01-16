@@ -43,48 +43,48 @@ describe('data', function() {
     it('sql generation should success', function() {
         let provider = new QueryProvider(visitor, translator);
 
-        let q0 = users
-        let command = provider.getCommand(q0.expression, {});
-        expect(command).toBe('SELECT * FROM user AS t0  WHERE 1');
+        let q0 = users;
+        let cmd0 = provider.getCommand(q0.expression, {});
+        expect(cmd0).toBe('SELECT * FROM user AS t0  WHERE 1');
 
         let q1 = users
             .filter(u => u.email.toLowerCase() === this.email)
-            .filter(u => (u.age > 25 && u.age <= 30) || (u.age >= 61 && u.age < 66))
-        command = provider.getCommand(q1.expression, {email: 'j.doe@mail.test'});
-        expect(command).toBe('SELECT * FROM user AS t0  WHERE ((1 AND (LOWER(t0.`email`) = ?<email>)) AND (((t0.`age` > 25) AND (t0.`age` <= 30)) OR ((t0.`age` >= 61) AND (t0.`age` < 66))))');
+            .filter(u => (u.age > 25 && u.age <= 30) || (u.age >= 61 && u.age < 66));
+        let cmd1 = provider.getCommand(q1.expression, {email: 'j.doe@mail.test'});
+        expect(cmd1).toBe('SELECT * FROM user AS t0  WHERE ((1 AND (LOWER(t0.`email`) = ?<email>)) AND (((t0.`age` > 25) AND (t0.`age` <= 30)) OR ((t0.`age` >= 61) AND (t0.`age` < 66))))');
 
         let q2 = users
             .filter(u => u.email.toLowerCase() === this.email)
             .filter(u => u.email.endsWith('@test.com'));
-        command = provider.getCommand(q2.expression, {email: 'j.doe@mail.test'});
-        expect(command).toBe('SELECT * FROM user AS t0  WHERE ((1 AND (LOWER(t0.`email`) = ?<email>)) AND t0.`email` LIKE \'%@test.com\')');
+        let cmd2 = provider.getCommand(q2.expression, {email: 'j.doe@mail.test'});
+        expect(cmd2).toBe('SELECT * FROM user AS t0  WHERE ((1 AND (LOWER(t0.`email`) = ?<email>)) AND t0.`email` LIKE \'%@test.com\')');
 
         let q3 = users
-            .filter(u => u.email.toLowerCase() !== this.email)
-        command = provider.getCommand(q3.expression, {email: 'j.doe@mail.test'});
-        expect(command).toBe('SELECT * FROM user AS t0  WHERE (1 AND (LOWER(t0.`email`) != ?<email>))');
+            .filter(u => u.email.toLowerCase() !== this.email);
+        let cmd3 = provider.getCommand(q3.expression, {email: 'j.doe@mail.test'});
+        expect(cmd3).toBe('SELECT * FROM user AS t0  WHERE (1 AND (LOWER(t0.`email`) != ?<email>))');
 
         let q4 = users
-            .filter(u => u.email.toLowerCase() != this.email)
-        command = provider.getCommand(q4.expression, {email: 'j.doe@mail.test'});
-        expect(command).toBe('SELECT * FROM user AS t0  WHERE (1 AND (LOWER(t0.`email`) != ?<email>))');
+            .filter(u => u.email.toLowerCase() != this.email);
+        let cmd4 = provider.getCommand(q4.expression, {email: 'j.doe@mail.test'});
+        expect(cmd4).toBe('SELECT * FROM user AS t0  WHERE (1 AND (LOWER(t0.`email`) != ?<email>))');
 
         let q5 = users
-            .filter(u => u.email.toLowerCase() == this.email)
-        command = provider.getCommand(q5.expression, {email: 'j.doe@mail.test'});
-        expect(command).toBe('SELECT * FROM user AS t0  WHERE (1 AND (LOWER(t0.`email`) = ?<email>))');
+            .filter(u => u.email.toLowerCase() == this.email);
+        let cmd5 = provider.getCommand(q5.expression, {email: 'j.doe@mail.test'});
+        expect(cmd5).toBe('SELECT * FROM user AS t0  WHERE (1 AND (LOWER(t0.`email`) = ?<email>))');
 
         let q6 = users
             .filter(u => u.email.toLowerCase() === this.email)
             .filter(u => u.username.toUpperCase().contains('test'));
-        command = provider.getCommand(q6.expression, {email: 'j.doe@mail.test'});
-        expect(command).toBe('SELECT * FROM user AS t0  WHERE ((1 AND (LOWER(t0.`email`) = ?<email>)) AND UPPER(t0.`username`) LIKE \'%test%\')');
+        let cmd6 = provider.getCommand(q6.expression, {email: 'j.doe@mail.test'});
+        expect(cmd6).toBe('SELECT * FROM user AS t0  WHERE ((1 AND (LOWER(t0.`email`) = ?<email>)) AND UPPER(t0.`username`) LIKE \'%test%\')');
 
         let q7 = users
             .filter(u => u.email.toLowerCase() === this.email)
             .filter(u => u.username.toUpperCase().startsWith('test'));
-        command = provider.getCommand(q7.expression, {email: 'j.doe@mail.test'});
-        expect(command).toBe('SELECT * FROM user AS t0  WHERE ((1 AND (LOWER(t0.`email`) = ?<email>)) AND UPPER(t0.`username`) LIKE \'test%\')');
+        let cmd7 = provider.getCommand(q7.expression, {email: 'j.doe@mail.test'});
+        expect(cmd7).toBe('SELECT * FROM user AS t0  WHERE ((1 AND (LOWER(t0.`email`) = ?<email>)) AND UPPER(t0.`username`) LIKE \'test%\')');
 
         let q8 = users
             .join(profiles, (u, p) => (u.id === p.userId))
@@ -95,8 +95,8 @@ describe('data', function() {
                 lastName: p.lastName.toUpperCase()
             }));
 
-        command = provider.getCommand(q8.expression, {email: 'j.doe@mail.test'});
-        expect(command).toBe('SELECT t0.`id` AS `id`, t0.`email` AS `email`, t1.`firstName` AS `firstName`, UPPER(t1.`lastName`) AS `lastName` FROM user AS t0 INNER JOIN profile AS t1 ON (t0.`id` = t1.`userId`) WHERE 1');
+        let cmd8 = provider.getCommand(q8.expression, {email: 'j.doe@mail.test'});
+        expect(cmd8).toBe('SELECT t0.`id` AS `id`, t0.`email` AS `email`, t1.`firstName` AS `firstName`, UPPER(t1.`lastName`) AS `lastName` FROM user AS t0 INNER JOIN profile AS t1 ON (t0.`id` = t1.`userId`) WHERE 1');
     });
 
     it('queryable.toArray should throw a NotImplementedError', function() {
@@ -132,17 +132,5 @@ describe('data', function() {
                 .toArray({email: 'j.doe@mail.test'});
         }).toThrowError(errors.NotSupportedError);
     });
-
-    /*describe('unsupported operator', function() {
-        it('should throw a NotSupportedError', function() {
-            expect(function() {
-                users
-                    .select(u => ({
-                        c: u.a - u.b
-                    }))
-                    .toArray();
-            }).toThrowError(errors.NotSupportedError);
-        });
-    });*/
 
 });

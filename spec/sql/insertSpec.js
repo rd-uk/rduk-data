@@ -24,7 +24,7 @@
 
 'use strict';
 
-fdescribe('insert stmt generation', function() {
+describe('insert stmt generation', function() {
     it('should success', function() {
         const ConstantExpression = require('@rduk/expression/lib/parser/expression/constant');
         const FieldExpression = require('@rduk/expression/lib/parser/expression/field');
