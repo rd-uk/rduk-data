@@ -27,7 +27,7 @@
 describe('data', function() {
 
     const Queryable = require('../lib/queryable');
-    const TableExpression = require('../lib/sql/expression/table');
+    const SourceExpression = require('../lib/expression/source');
     const QueryProvider = require('../lib/query/default');
     const visitor = require('../lib/sql/expression/visitor');
     const translator = require('../lib/sql/translator');
@@ -36,8 +36,8 @@ describe('data', function() {
     let users, profiles;
 
     beforeEach(function() {
-        users = new Queryable(new TableExpression('user'));
-        profiles = new Queryable(new TableExpression('profile'));
+        users = new Queryable(new SourceExpression('user'));
+        profiles = new Queryable(new SourceExpression('profile'));
     });
 
     it('sql generation should success', function() {
