@@ -9,6 +9,12 @@ thanks to a DataProvider
 
 __Warning__: not prod ready.
 
+## Installation
+
+```sh
+npm i --save rduk-data
+```
+
 ## QueryProvider
 
 ### Implementations
