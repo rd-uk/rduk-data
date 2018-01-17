@@ -59,6 +59,6 @@ describe('update stmt generation', function() {
         expression.assignments.push(assignment);
 
         let command = provider.getCommand(expression);
-        expect(command).toBe('UPDATE users t0 SET t0.`email` = ?<email> WHERE (t0.`id` = ?<id>)');
+        expect(command).toBe('UPDATE users t0 SET t0.email = ?<email> WHERE (t0.id = ?<id>)');
     });
 });

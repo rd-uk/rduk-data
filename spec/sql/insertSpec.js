@@ -52,6 +52,6 @@ describe('insert stmt generation', function() {
 
         let command = provider.getCommand(expression);
         console.log(command);
-        expect(command).toBe('INSERT INTO users (`email`, `username`, `password`) VALUES (?<email>, ?<username>, ?<password>)');
+        expect(command).toBe('INSERT INTO users (email, username, password) VALUES (?<email>, ?<username>, ?<password>)');
     });
 });
