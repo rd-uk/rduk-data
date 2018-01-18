@@ -43,9 +43,9 @@ describe('data', function() {
     it('sql generation should success', function() {
         let provider = new QueryProvider(visitor, translator);
 
-        let q0 = users;
+        let q0 = users.skip(20).take(10);
         let cmd0 = provider.getCommand(q0.expression, {});
-        expect(cmd0).toBe('SELECT * FROM user AS t0  WHERE true');
+        expect(cmd0).toBe('SELECT * FROM user AS t0  WHERE true LIMIT 10 OFFSET 20');
 
         let q1 = users
             .filter(u => u.email.toLowerCase() === this.email)
@@ -60,7 +60,8 @@ describe('data', function() {
         expect(cmd2).toBe('SELECT * FROM user AS t0  WHERE ((true AND (LOWER(t0.email) = ?<email>)) AND t0.email LIKE \'%@test.com\')');
 
         let q3 = users
-            .filter(u => u.email.toLowerCase() !== this.email);
+            .filter(u => u.email.toLowerCase() !== this.email)
+            .skip(0);
         let cmd3 = provider.getCommand(q3.expression, {email: 'j.doe@mail.test'});
         expect(cmd3).toBe('SELECT * FROM user AS t0  WHERE (true AND (LOWER(t0.email) != ?<email>))');
 
@@ -112,7 +113,7 @@ describe('data', function() {
             users.toArray();
         }).toThrowError(errors.NotImplementedError);
 
-        expect(function() {
+        /*expect(function() {
             users
                 .skip(0)
                 .toArray({email: 'j.doe@mail.test'});
@@ -122,7 +123,7 @@ describe('data', function() {
             users
                 .take(10)
                 .toArray({email: 'j.doe@mail.test'});
-        }).toThrowError(errors.NotSupportedError);
+        }).toThrowError(errors.NotSupportedError);*/
 
         expect(function() {
             users
