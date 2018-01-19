@@ -37,11 +37,11 @@ describe('update stmt generation', function() {
         const TokenType = require('@rduk/expression/lib/token/type');
         const UpdateExpression = require('../../lib/sql/expression/update');
 
-        const translator = require('../../lib/sql/translator');
-        const visitor = require('../../lib/sql/expression/visitor');
+        const Translator = require('../../lib/sql/translator/expression');
+        const Visitor = require('../../lib/sql/visitor/expression');
         const QueryProvider = require('../../lib/query/default');
 
-        const provider = new QueryProvider(visitor, translator);
+        const provider = new QueryProvider(Visitor, Translator);
 
         let expression = new UpdateExpression(new SourceExpression('users'));
         let binary = new BinaryExpression(

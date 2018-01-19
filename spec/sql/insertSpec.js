@@ -35,11 +35,11 @@ describe('insert stmt generation', function() {
         const SourceExpression = require('../../lib/expression/source');
         const InsertExpression = require('../../lib/sql/expression/insert');
 
-        const translator = require('../../lib/sql/translator');
-        const visitor = require('../../lib/sql/expression/visitor');
+        const Translator = require('../../lib/sql/translator/expression');
+        const Visitor = require('../../lib/sql/visitor/expression');
         const QueryProvider = require('../../lib/query/default');
 
-        const provider = new QueryProvider(visitor, translator);
+        const provider = new QueryProvider(Visitor, Translator);
 
         let expression = new InsertExpression(new SourceExpression('users'));
         let obj = new ObjectLiteralExpression([
