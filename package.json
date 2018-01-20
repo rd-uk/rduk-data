@@ -1,6 +1,6 @@
 {
   "name": "@rduk/data",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Data layer abstraction",
   "engines": {
     "node": ">=6.4.0"
