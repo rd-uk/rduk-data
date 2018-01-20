@@ -90,14 +90,23 @@ describe('data', function() {
         let q8 = users
             .join(profiles, (u, p) => (u.id === p.userId))
             .select((u, p) => ({
+                id: u.id
+            }));
+
+        let cmd8 = provider.getCommand(q8.expression, {email: 'j.doe@mail.test'});
+        expect(cmd8).toBe('SELECT t0.id AS id FROM user AS t0 INNER JOIN profile AS t1 ON (t0.id = t1.userId) WHERE true');
+
+        let q9 = users
+            .join(profiles, (u, p) => (u.id === p.userId))
+            .select((u, p) => ({
                 id: u.id,
                 email: u.email,
                 firstName: p.firstName,
                 lastName: p.lastName.toUpperCase()
             }));
 
-        let cmd8 = provider.getCommand(q8.expression, {email: 'j.doe@mail.test'});
-        expect(cmd8).toBe('SELECT t0.id AS id, t0.email AS email, t1.firstName AS firstName, UPPER(t1.lastName) AS lastName FROM user AS t0 INNER JOIN profile AS t1 ON (t0.id = t1.userId) WHERE true');
+        let cmd9 = provider.getCommand(q9.expression, {email: 'j.doe@mail.test'});
+        expect(cmd9).toBe('SELECT t0.id AS id, t0.email AS email, t1.firstName AS firstName, UPPER(t1.lastName) AS lastName FROM user AS t0 INNER JOIN profile AS t1 ON (t0.id = t1.userId) WHERE true');
     });
 
     it('queryable.toArray should throw a NotImplementedError', function() {
