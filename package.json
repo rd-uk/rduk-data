@@ -9,7 +9,7 @@
   "scripts": {
     "pretest": "cp ./spec/resources/*yml .",
     "test": "istanbul cover jasmine --report cobertura",
-    "posttest": "rm *yml",
+    "posttest": "rm ./*yml",
     "report": "istanbul report",
     "coveralls": "npm run report && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
