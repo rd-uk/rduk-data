@@ -22,17 +22,14 @@
  * SOFTWARE.
  */
 
-'use strict';
+'use strict'
 
-const BaseDataProvider = require('../../lib/base');
+const BaseDataProvider = require('../../lib/base')
 
 class MockDataProvider extends BaseDataProvider {
-    constructor(config, section) {
-        super(config, section);
-    }
-    execute(command, parameters) {
-
-    }
+  execute (command, parameters) {
+    return Promise.resolve([])
+  }
 }
 
-module.exports = BaseDataProvider;
+module.exports = MockDataProvider
