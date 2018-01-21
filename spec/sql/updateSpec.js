@@ -22,43 +22,44 @@
  * SOFTWARE.
  */
 
-'use strict';
+/* eslint-env jasmine */
 
-describe('update stmt generation', function() {
-    it('should success', function() {
-        const BinaryExpression = require('@rduk/expression/lib/parser/expression/binary');
-        const ConstantExpression = require('@rduk/expression/lib/parser/expression/constant');
-        const FieldExpression = require('@rduk/expression/lib/parser/expression/field');
-        const LambdaExpression = require('@rduk/expression/lib/parser/expression/lambda');
-        const NameExpression = require('@rduk/expression/lib/parser/expression/name');
-        const ObjectLiteralExpression = require('@rduk/expression/lib/parser/expression/object');
-        const PropertyExpression = require('@rduk/expression/lib/parser/expression/property');
-        const SourceExpression = require('../../lib/expression/source');
-        const TokenType = require('@rduk/expression/lib/token/type');
-        const UpdateExpression = require('../../lib/sql/expression/update');
+'use strict'
 
-        const Translator = require('../../lib/sql/translator/expression');
-        const Visitor = require('../../lib/sql/visitor/expression');
-        const QueryProvider = require('../../lib/query/default');
+describe('update stmt generation', function () {
+  it('should success', function () {
+    const BinaryExpression = require('@rduk/expression/lib/parser/expression/binary')
+    const FieldExpression = require('@rduk/expression/lib/parser/expression/field')
+    const LambdaExpression = require('@rduk/expression/lib/parser/expression/lambda')
+    const NameExpression = require('@rduk/expression/lib/parser/expression/name')
+    const ObjectLiteralExpression = require('@rduk/expression/lib/parser/expression/object')
+    const PropertyExpression = require('@rduk/expression/lib/parser/expression/property')
+    const SourceExpression = require('../../lib/expression/source')
+    const TokenType = require('@rduk/expression/lib/token/type')
+    const UpdateExpression = require('../../lib/sql/expression/update')
 
-        const provider = new QueryProvider(Visitor, Translator);
+    const Translator = require('../../lib/sql/translator/expression')
+    const Visitor = require('../../lib/sql/visitor/expression')
+    const QueryProvider = require('../../lib/query/default')
 
-        let expression = new UpdateExpression(new SourceExpression('users'));
-        let binary = new BinaryExpression(
+    const provider = new QueryProvider(Visitor, Translator)
+
+    let expression = new UpdateExpression(new SourceExpression('users'))
+    let binary = new BinaryExpression(
             new PropertyExpression(new NameExpression('user'), 'id'),
             new PropertyExpression(new NameExpression('this'), 'id'),
             TokenType.EQEQEQ
-        );
-        let where = new LambdaExpression(binary, [new NameExpression('user')]);
-        expression.where = where;
+        )
+    let where = new LambdaExpression(binary, [new NameExpression('user')])
+    expression.where = where
 
-        let obj = new ObjectLiteralExpression([
-            new FieldExpression('email', new PropertyExpression(new NameExpression('this'), 'email'))
-        ]);
-        let assignment = new LambdaExpression(obj, []);
-        expression.assignments.push(assignment);
+    let obj = new ObjectLiteralExpression([
+      new FieldExpression('email', new PropertyExpression(new NameExpression('this'), 'email'))
+    ])
+    let assignment = new LambdaExpression(obj, [])
+    expression.assignments.push(assignment)
 
-        let command = provider.getCommand(expression);
-        expect(command).toBe('UPDATE users t0 SET t0.email = ?<email> WHERE (t0.id = ?<id>)');
-    });
-});
+    let command = provider.getCommand(expression)
+    expect(command).toBe('UPDATE users t0 SET t0.email = ?<email> WHERE (t0.id = ?<id>)')
+  })
+})

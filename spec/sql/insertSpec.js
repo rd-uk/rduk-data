@@ -22,35 +22,36 @@
  * SOFTWARE.
  */
 
-'use strict';
+/* eslint-env jasmine */
 
-describe('insert stmt generation', function() {
-    it('should success', function() {
-        const ConstantExpression = require('@rduk/expression/lib/parser/expression/constant');
-        const FieldExpression = require('@rduk/expression/lib/parser/expression/field');
-        const LambdaExpression = require('@rduk/expression/lib/parser/expression/lambda');
-        const NameExpression = require('@rduk/expression/lib/parser/expression/name');
-        const ObjectLiteralExpression = require('@rduk/expression/lib/parser/expression/object');
-        const PropertyExpression = require('@rduk/expression/lib/parser/expression/property');
-        const SourceExpression = require('../../lib/expression/source');
-        const InsertExpression = require('../../lib/sql/expression/insert');
+'use strict'
 
-        const Translator = require('../../lib/sql/translator/expression');
-        const Visitor = require('../../lib/sql/visitor/expression');
-        const QueryProvider = require('../../lib/query/default');
+describe('insert stmt generation', function () {
+  it('should success', function () {
+    const FieldExpression = require('@rduk/expression/lib/parser/expression/field')
+    const LambdaExpression = require('@rduk/expression/lib/parser/expression/lambda')
+    const NameExpression = require('@rduk/expression/lib/parser/expression/name')
+    const ObjectLiteralExpression = require('@rduk/expression/lib/parser/expression/object')
+    const PropertyExpression = require('@rduk/expression/lib/parser/expression/property')
+    const SourceExpression = require('../../lib/expression/source')
+    const InsertExpression = require('../../lib/sql/expression/insert')
 
-        const provider = new QueryProvider(Visitor, Translator);
+    const Translator = require('../../lib/sql/translator/expression')
+    const Visitor = require('../../lib/sql/visitor/expression')
+    const QueryProvider = require('../../lib/query/default')
 
-        let expression = new InsertExpression(new SourceExpression('users'));
-        let obj = new ObjectLiteralExpression([
-            new FieldExpression('email', new PropertyExpression(new NameExpression('this'), 'email')),
-            new FieldExpression('username', new PropertyExpression(new NameExpression('this'), 'username')),
-            new FieldExpression('password', new PropertyExpression(new NameExpression('this'), 'password'))
-        ]);
-        let assignment = new LambdaExpression(obj, []);
-        expression.assignments.push(assignment);
+    const provider = new QueryProvider(Visitor, Translator)
 
-        let command = provider.getCommand(expression);
-        expect(command).toBe('INSERT INTO users (email, username, password) VALUES (?<email>, ?<username>, ?<password>)');
-    });
-});
+    let expression = new InsertExpression(new SourceExpression('users'))
+    let obj = new ObjectLiteralExpression([
+      new FieldExpression('email', new PropertyExpression(new NameExpression('this'), 'email')),
+      new FieldExpression('username', new PropertyExpression(new NameExpression('this'), 'username')),
+      new FieldExpression('password', new PropertyExpression(new NameExpression('this'), 'password'))
+    ])
+    let assignment = new LambdaExpression(obj, [])
+    expression.assignments.push(assignment)
+
+    let command = provider.getCommand(expression)
+    expect(command).toBe('INSERT INTO users (email, username, password) VALUES (?<email>, ?<username>, ?<password>)')
+  })
+})

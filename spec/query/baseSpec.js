@@ -22,16 +22,18 @@
  * SOFTWARE.
  */
 
-'use strict';
+/* eslint-env jasmine */
 
-const errors = require('@rduk/errors');
-const Base = require('../../lib/query/base');
+'use strict'
 
-describe('query base class execute method', function() {
-    it('should throw a NotImplementedError', function() {
-        let query = new Base();
-        expect(function() {
-            query.execute();
-        }).toThrowError(errors.NotImplementedError);
-    });
-});
+const errors = require('@rduk/errors')
+const Base = require('../../lib/query/base')
+
+describe('query base class execute method', function () {
+  it('should throw a NotImplementedError', function () {
+    let query = new Base()
+    expect(function () {
+      query.execute()
+    }).toThrowError(errors.NotImplementedError)
+  })
+})
