@@ -31,7 +31,7 @@
   "dependencies": {
     "@rduk/configuration": "2.1.1",
     "@rduk/errors": "1.3.0",
-    "@rduk/expression": "0.2.1",
+    "@rduk/expression": "0.2.2",
     "@rduk/logger": "0.1.5",
     "@rduk/provider": "3.0.1"
   },
