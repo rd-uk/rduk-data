@@ -26,24 +26,19 @@
 
 'use strict'
 
-describe('Base SQL translator\'s', function () {
-  describe('translate method', function () {
-    it('should throw a NotImplementedError', function () {
-      const errors = require('@rduk/errors')
-      const BaseTranslator = require('../../../lib/sql/translator/base')
+const errors = require('@rduk/errors')
+const BinaryTranslator = require('../../../lib/sql/translator/binary')
+const BinaryExpression = require('@rduk/expression/lib/parser/expression/binary')
 
-      let t1 = new BaseTranslator({})
-      expect(function () {
-        t1.translateAssignments()
-      }).toThrowError()
-      expect(function () {
-        t1.translate()
-      }).toThrowError(errors.NotImplementedError)
+describe('BinaryTranslator:', function () {
+  describe('translating unsupported operator', function () {
+    it('should throw a NotSupportedError', function () {
+      let expression = new BinaryExpression(1, 1, '&')
+      let translator = new BinaryTranslator(expression, [])
 
-      let t2 = new BaseTranslator({ assignments: [] })
       expect(function () {
-        t2.translateAssignments()
-      }).toThrowError()
+        translator.translate({})
+      }).toThrowError(errors.NotSupportedError)
     })
   })
 })

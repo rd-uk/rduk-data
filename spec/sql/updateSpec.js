@@ -44,22 +44,27 @@ describe('update stmt generation', function () {
 
     const provider = new QueryProvider(Visitor, Translator)
 
-    let expression = new UpdateExpression(new SourceExpression('users'))
+    let obj = new ObjectLiteralExpression([
+      new FieldExpression('email', new PropertyExpression(new NameExpression('this'), 'email'))
+    ])
+    let assignment = new LambdaExpression(obj, [])
+
+    let expression1 = new UpdateExpression(new SourceExpression('users'))
     let binary = new BinaryExpression(
             new PropertyExpression(new NameExpression('user'), 'id'),
             new PropertyExpression(new NameExpression('this'), 'id'),
             TokenType.EQEQEQ
         )
     let where = new LambdaExpression(binary, [new NameExpression('user')])
-    expression.where = where
+    expression1.where = where
+    expression1.assignments.push(assignment)
 
-    let obj = new ObjectLiteralExpression([
-      new FieldExpression('email', new PropertyExpression(new NameExpression('this'), 'email'))
-    ])
-    let assignment = new LambdaExpression(obj, [])
-    expression.assignments.push(assignment)
+    let command1 = provider.getCommand(expression1)
+    expect(command1).toBe('UPDATE users t0 SET t0.email = ?<email> WHERE (t0.id = ?<id>)')
 
-    let command = provider.getCommand(expression)
-    expect(command).toBe('UPDATE users t0 SET t0.email = ?<email> WHERE (t0.id = ?<id>)')
+    let expression2 = new UpdateExpression(new SourceExpression('users'))
+    expression2.assignments.push(assignment)
+    let command2 = provider.getCommand(expression2)
+    expect(command2).toBe('UPDATE users t0 SET t0.email = ?<email> WHERE true')
   })
 })

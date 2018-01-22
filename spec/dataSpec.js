@@ -26,109 +26,187 @@
 
 'use strict'
 
+const errors = require('@rduk/errors')
+const Queryable = require('../lib/queryable')
+const SourceExpression = require('../lib/expression/source')
+
 describe('data', function () {
-  const Queryable = require('../lib/queryable')
-  const SourceExpression = require('../lib/expression/source')
-  const QueryProvider = require('../lib/query/default')
-  const Visitor = require('../lib/sql/visitor/expression')
-  const Translator = require('../lib/sql/translator/expression')
-  const errors = require('@rduk/errors')
+  describe('base provider execute method', function () {
+    const BaseProvider = require('../lib/base')
 
-  let users
-  let profiles
-
-  beforeEach(function () {
-    users = new Queryable(new SourceExpression('user'))
-    profiles = new Queryable(new SourceExpression('profile'))
+    it('should throw a NotImplementedError', function () {
+      let provider = new BaseProvider({name: 'base'})
+      expect(function () {
+        provider.execute()
+      }).toThrowError(errors.NotImplementedError)
+    })
   })
 
-  it('sql generation should success', function () {
-    let provider = new QueryProvider(Visitor, Translator)
+  describe('query', function () {
+    const QueryProvider = require('../lib/query/default')
+    const Visitor = require('../lib/sql/visitor/expression')
+    const Translator = require('../lib/sql/translator/expression')
+    const errors = require('@rduk/errors')
 
-    let q0 = users.skip(20).take(10)
-    let cmd0 = provider.getCommand(q0.expression, {})
-    expect(cmd0).toBe('SELECT * FROM user AS t0  WHERE true LIMIT 10 OFFSET 20')
+    let users
+    let profiles
 
-    let q1 = users
-            .filter(u => u.email.toLowerCase() === this.email)
-            .filter(u => (u.age > 25 && u.age <= 30) || (u.age >= 61 && u.age < 66))
-    let cmd1 = provider.getCommand(q1.expression, {email: 'j.doe@mail.test'})
-    expect(cmd1).toBe('SELECT * FROM user AS t0  WHERE ((true AND (LOWER(t0.email) = ?<email>)) AND (((t0.age > 25) AND (t0.age <= 30)) OR ((t0.age >= 61) AND (t0.age < 66))))')
+    beforeEach(function () {
+      users = new Queryable(new SourceExpression('user'))
+      profiles = new Queryable(new SourceExpression('profile'))
+    })
 
-    let q2 = users
-            .filter(u => u.email.toLowerCase() === this.email)
-            .filter(u => u.email.endsWith('@test.com'))
-    let cmd2 = provider.getCommand(q2.expression, {email: 'j.doe@mail.test'})
-    expect(cmd2).toBe('SELECT * FROM user AS t0  WHERE ((true AND (LOWER(t0.email) = ?<email>)) AND t0.email LIKE \'%@test.com\')')
+    it('sql generation should success', function () {
+      let provider = new QueryProvider(Visitor, Translator)
 
-    let q3 = users
-            .filter(u => u.email.toLowerCase() !== this.email)
-            .skip(0)
-    let cmd3 = provider.getCommand(q3.expression, {email: 'j.doe@mail.test'})
-    expect(cmd3).toBe('SELECT * FROM user AS t0  WHERE (true AND (LOWER(t0.email) != ?<email>))')
+      let q0 = users.skip(20).take(10)
+      let cmd0 = provider.getCommand(q0.expression, {})
+      expect(cmd0).toBe('SELECT * FROM user AS t0  WHERE true LIMIT 10 OFFSET 20')
 
-    let q4 = users
-            .filter(u => u.email.toLowerCase() != this.email) // eslint-disable-line
-    let cmd4 = provider.getCommand(q4.expression, {email: 'j.doe@mail.test'})
-    expect(cmd4).toBe('SELECT * FROM user AS t0  WHERE (true AND (LOWER(t0.email) != ?<email>))')
+      let q1 = users
+              .filter(u => u.email.toLowerCase() === this.email)
+              .filter(u => (u.age > 25 && u.age <= 30) || (u.age >= 61 && u.age < 66))
+      let cmd1 = provider.getCommand(q1.expression, {email: 'j.doe@mail.test'})
+      expect(cmd1).toBe('SELECT * FROM user AS t0  WHERE ((true AND (LOWER(t0.email) = ?<email>)) AND (((t0.age > 25) AND (t0.age <= 30)) OR ((t0.age >= 61) AND (t0.age < 66))))')
 
-    let q5 = users
-            .filter(u => u.email.toLowerCase() == this.email) // eslint-disable-line
-    let cmd5 = provider.getCommand(q5.expression, {email: 'j.doe@mail.test'})
-    expect(cmd5).toBe('SELECT * FROM user AS t0  WHERE (true AND (LOWER(t0.email) = ?<email>))')
+      let q2 = users
+              .filter(u => u.email.toLowerCase() === this.email)
+              .filter(u => u.email.endsWith('@test.com'))
+      let cmd2 = provider.getCommand(q2.expression, {email: 'j.doe@mail.test'})
+      expect(cmd2).toBe('SELECT * FROM user AS t0  WHERE ((true AND (LOWER(t0.email) = ?<email>)) AND t0.email LIKE \'%@test.com\')')
 
-    let q6 = users
-            .filter(u => u.email.toLowerCase() === this.email)
-            .filter(u => u.username.toUpperCase().contains('test'))
-    let cmd6 = provider.getCommand(q6.expression, {email: 'j.doe@mail.test'})
-    expect(cmd6).toBe('SELECT * FROM user AS t0  WHERE ((true AND (LOWER(t0.email) = ?<email>)) AND UPPER(t0.username) LIKE \'%test%\')')
+      let q3 = users
+              .filter(u => u.email.toLowerCase() !== this.email)
+              .skip(0)
+      let cmd3 = provider.getCommand(q3.expression, {email: 'j.doe@mail.test'})
+      expect(cmd3).toBe('SELECT * FROM user AS t0  WHERE (true AND (LOWER(t0.email) != ?<email>))')
 
-    let q7 = users
-            .filter(u => u.email.toLowerCase() === this.email)
-            .filter(u => u.username.toUpperCase().startsWith('test'))
-    let cmd7 = provider.getCommand(q7.expression, {email: 'j.doe@mail.test'})
-    expect(cmd7).toBe('SELECT * FROM user AS t0  WHERE ((true AND (LOWER(t0.email) = ?<email>)) AND UPPER(t0.username) LIKE \'test%\')')
+      let q4 = users
+              .filter(u => u.email.toLowerCase() != this.email) // eslint-disable-line
+      let cmd4 = provider.getCommand(q4.expression, {email: 'j.doe@mail.test'})
+      expect(cmd4).toBe('SELECT * FROM user AS t0  WHERE (true AND (LOWER(t0.email) != ?<email>))')
 
-    let q8 = users
-            .join(profiles, (u, p) => (u.id === p.userId))
-            .select((u, p) => ({
-              id: u.id
-            }))
+      let q5 = users
+              .filter(u => u.email.toLowerCase() == this.email) // eslint-disable-line
+      let cmd5 = provider.getCommand(q5.expression, {email: 'j.doe@mail.test'})
+      expect(cmd5).toBe('SELECT * FROM user AS t0  WHERE (true AND (LOWER(t0.email) = ?<email>))')
 
-    let cmd8 = provider.getCommand(q8.expression, {email: 'j.doe@mail.test'})
-    expect(cmd8).toBe('SELECT t0.id AS id FROM user AS t0 INNER JOIN profile AS t1 ON (t0.id = t1.userId) WHERE true')
+      let q6 = users
+              .filter(u => u.email.toLowerCase() === this.email)
+              .filter(u => u.username.toUpperCase().contains('test'))
+      let cmd6 = provider.getCommand(q6.expression, {email: 'j.doe@mail.test'})
+      expect(cmd6).toBe('SELECT * FROM user AS t0  WHERE ((true AND (LOWER(t0.email) = ?<email>)) AND UPPER(t0.username) LIKE \'%test%\')')
 
-    let q9 = users
-            .join(profiles, (u, p) => (u.id === p.userId))
-            .select((u, p) => ({
-              id: u.id,
-              email: u.email,
-              firstName: p.firstName,
-              lastName: p.lastName.toUpperCase()
-            }))
+      let q7 = users
+              .filter(u => u.email.toLowerCase() === this.email)
+              .filter(u => u.email.toLowerCase().contains(this.host))
+              .filter(u => u.username.toUpperCase().startsWith('test'))
+      let cmd7 = provider.getCommand(q7.expression, {email: 'j.doe@mail.test', host: 'mail.test'})
+      expect(cmd7).toBe('SELECT * FROM user AS t0  WHERE (((true AND (LOWER(t0.email) = ?<email>)) AND LOWER(t0.email) LIKE ?<host>) AND UPPER(t0.username) LIKE \'test%\')')
 
-    let cmd9 = provider.getCommand(q9.expression, {email: 'j.doe@mail.test'})
-    expect(cmd9).toBe('SELECT t0.id AS id, t0.email AS email, t1.firstName AS firstName, UPPER(t1.lastName) AS lastName FROM user AS t0 INNER JOIN profile AS t1 ON (t0.id = t1.userId) WHERE true')
-  })
+      let q8 = users
+              .join(profiles, (u, p) => (u.id === p.userId))
+              .select((u, p) => ({
+                id: u.id
+              }))
 
-  it('queryable.toArray to return empty array', function (done) {
-    users
-      .filter(u => u.email.toLowerCase() === this.email)
-      .toArray({email: 'j.doe@mail.test'})
-      .then(result => {
-        expect(Array.isArray(result)).toBe(true)
-        expect(result.length).toBe(0)
-        done()
-      })
-  })
+      let cmd8 = provider.getCommand(q8.expression, {email: 'j.doe@mail.test'})
+      expect(cmd8).toBe('SELECT t0.id AS id FROM user AS t0 INNER JOIN profile AS t1 ON (t0.id = t1.userId) WHERE true')
 
-  it('queryable orderBy should throw a NotSupportedError', function () {
-    expect(function () {
+      let q9 = users
+              .join(profiles, (u, p) => (u.id === p.userId))
+              .select((u, p) => ({
+                id: u.id,
+                email: u.email,
+                firstName: p.firstName,
+                lastName: p.lastName.toUpperCase()
+              }))
+
+      let cmd9 = provider.getCommand(q9.expression, {email: 'j.doe@mail.test'})
+      expect(cmd9).toBe('SELECT t0.id AS id, t0.email AS email, t1.firstName AS firstName, UPPER(t1.lastName) AS lastName FROM user AS t0 INNER JOIN profile AS t1 ON (t0.id = t1.userId) WHERE true')
+
+      // test modulo
+      let q10 = users
+        .select(u => ({
+          test: 9 % 2
+        }))
+      let cmd10 = provider.getCommand(q10.expression)
+      console.log(q10.expression.args[0].body)
+      expect(cmd10).toBe('SELECT MOD(9, 2) AS test FROM user AS t0  WHERE true')
+    })
+
+    it('queryable.toArray to return empty array', function (done) {
       users
-                .filter(u => (u.age > 25 && u.age <= 30) || (u.age >= 61 && u.age < 66))
-                .filter(u => u.email.endsWith('@test.com'))
-                .orderBy(u => (u.id))
-                .toArray({email: 'j.doe@mail.test'})
-    }).toThrowError(errors.NotSupportedError)
+        .filter(u => u.email.toLowerCase() === this.email)
+        .toArray({email: 'j.doe@mail.test'})
+        .then(result => {
+          expect(Array.isArray(result)).toBe(true)
+          expect(result.length).toBe(0)
+          done()
+        })
+    })
+
+    it('queryable orderBy should throw a NotSupportedError', function () {
+      expect(function () {
+        users
+                  .filter(u => (u.age > 25 && u.age <= 30) || (u.age >= 61 && u.age < 66))
+                  .filter(u => u.email.endsWith('@test.com'))
+                  .orderBy(u => (u.id))
+                  .toArray({email: 'j.doe@mail.test'})
+      }).toThrowError(errors.NotSupportedError)
+    })
+  })
+
+  describe('queryable first', function () {
+    it('should return the first element', function (done) {
+      let context = {}
+      let q11 = new Queryable(new SourceExpression('q11'))
+      spyOn(q11, 'skip').and.returnValue(q11)
+      spyOn(q11, 'take').and.returnValue(q11)
+      spyOn(q11, 'toArray').and.returnValue(Promise.resolve(['test']))
+      q11.first(context)
+        .then(result => {
+          expect(q11.skip).toHaveBeenCalledWith(0)
+          expect(q11.take).toHaveBeenCalledWith(1)
+          expect(q11.toArray).toHaveBeenCalledWith(context)
+          expect(result).toBe('test')
+          done()
+        })
+    })
+  })
+
+  describe('queryable single', function () {
+    describe('if only one element returned by toArray', function () {
+      it('should return the element ', function (done) {
+        let context = {}
+        let q12 = new Queryable(new SourceExpression('q12'))
+        spyOn(q12, 'skip').and.returnValue(q12)
+        spyOn(q12, 'take').and.returnValue(q12)
+        spyOn(q12, 'toArray').and.returnValue(Promise.resolve(['test']))
+        q12.single(context)
+          .then(result => {
+            expect(q12.skip).toHaveBeenCalledWith(0)
+            expect(q12.take).toHaveBeenCalledWith(2)
+            expect(q12.toArray).toHaveBeenCalledWith(context)
+            expect(result).toBe('test')
+            done()
+          })
+      })
+    })
+
+    describe('if more than one element returned by toArray', function () {
+      it('should reject the Promise', function (done) {
+        let context = {}
+        let q13 = new Queryable(new SourceExpression('q13'))
+        spyOn(q13, 'skip').and.returnValue(q13)
+        spyOn(q13, 'take').and.returnValue(q13)
+        spyOn(q13, 'toArray').and.returnValue(Promise.resolve(['test 1', 'test 2']))
+        q13.single(context)
+          .catch(err => {
+            expect(err.message).toBe('Not one and only one element.')
+            done()
+          })
+      })
+    })
   })
 })
