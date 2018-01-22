@@ -26,23 +26,20 @@
 
 'use strict'
 
-describe('Base SQL translator\'s', function () {
-  describe('translate method', function () {
-    it('should throw a NotImplementedError', function () {
-      const errors = require('@rduk/errors')
-      const BaseTranslator = require('../../../lib/sql/translator/base')
+const ExpressionTranslator = require('../../lib/translator/expression')
+const UnknownExpression = require('../helpers/unknownExpression')
 
-      let t1 = new BaseTranslator({})
+describe('ExpressionTranslator', function () {
+  describe('translate method called with unknown Expression', function () {
+    it('should throw an Error', function () {
+      let translator = new ExpressionTranslator({}, new Map())
       expect(function () {
-        t1.translateAssignments()
-      }).toThrowError()
-      expect(function () {
-        t1.translate()
-      }).toThrowError(errors.NotImplementedError)
-
-      let t2 = new BaseTranslator({ assignments: [] })
-      expect(function () {
-        t2.translateAssignments()
+        try {
+          translator.translate(new UnknownExpression())
+        } catch (err) {
+          expect(err.message).toBe('No translator found for UnknownExpression')
+          throw err
+        }
       }).toThrowError()
     })
   })

@@ -26,24 +26,25 @@
 
 'use strict'
 
-describe('Base SQL translator\'s', function () {
-  describe('translate method', function () {
-    it('should throw a NotImplementedError', function () {
-      const errors = require('@rduk/errors')
-      const BaseTranslator = require('../../../lib/sql/translator/base')
+const errors = require('@rduk/errors')
+const ConstantExpression = require('@rduk/expression/lib/parser/expression/constant')
+const MethodExpression = require('@rduk/expression/lib/parser/expression/method')
+const MethodTranslator = require('../../../lib/sql/translator/method')
 
-      let t1 = new BaseTranslator({})
-      expect(function () {
-        t1.translateAssignments()
-      }).toThrowError()
-      expect(function () {
-        t1.translate()
-      }).toThrowError(errors.NotImplementedError)
+describe('MethodTranslator:', function () {
+  describe('translating unsupported operator', function () {
+    it('should throw a NotSupportedError', function () {
+      let expression = new MethodExpression({context: new ConstantExpression(42)}, 'unsupported', [])
+      let provider = {
+        translator: {
+          translate: () => 'dummy content'
+        }
+      }
+      let translator = new MethodTranslator(expression, [], provider)
 
-      let t2 = new BaseTranslator({ assignments: [] })
       expect(function () {
-        t2.translateAssignments()
-      }).toThrowError()
+        translator.translate({})
+      }).toThrowError(errors.NotSupportedError)
     })
   })
 })
