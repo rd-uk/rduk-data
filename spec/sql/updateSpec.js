@@ -60,11 +60,11 @@ describe('update stmt generation', function () {
     expression1.assignments.push(assignment)
 
     let command1 = provider.getCommand(expression1)
-    expect(command1).toBe('UPDATE users t0 SET t0.email = ?<email> WHERE (t0.id = ?<id>)')
+    expect(command1).toBe('UPDATE users AS t0 SET email = ?<email> WHERE (t0.id = ?<id>)')
 
     let expression2 = new UpdateExpression(new SourceExpression('users'))
     expression2.assignments.push(assignment)
     let command2 = provider.getCommand(expression2)
-    expect(command2).toBe('UPDATE users t0 SET t0.email = ?<email> WHERE true')
+    expect(command2).toBe('UPDATE users AS t0 SET email = ?<email> WHERE true')
   })
 })
