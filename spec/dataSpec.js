@@ -50,10 +50,12 @@ describe('data', function () {
 
     let users
     let profiles
+    let followers
 
     beforeEach(function () {
       users = new Queryable(new SourceExpression('user'))
       profiles = new Queryable(new SourceExpression('profile'))
+      followers = new Queryable(new SourceExpression('follower'))
     })
 
     it('sql generation should success', function () {
@@ -131,8 +133,38 @@ describe('data', function () {
           test: 9 % 2
         }))
       let cmd10 = provider.getCommand(q10.expression)
-      console.log(q10.expression.args[0].body)
       expect(cmd10).toBe('SELECT MOD(9, 2) AS test FROM user AS t0  WHERE true')
+
+      let q11 = profiles
+        .join(followers, (p, f) => (p.id === f.profileId))
+        .groupBy((p) => ({
+          id: p.id
+        }))
+        .select((p, f) => ({
+          id: p.id,
+          firstName: p.firstName,
+          lastName: p.lastName,
+          followers: f.id.count()
+        }))
+      let cmd11 = provider.getCommand(q11.expression)
+      expect(cmd11).toBe('SELECT t0.id AS id, t0.firstName AS firstName, t0.lastName AS lastName, COUNT(t1.id) AS followers FROM profile AS t0 INNER JOIN follower AS t1 ON (t0.id = t1.profileId) WHERE true GROUP BY t0.id')
+
+      let q12 = profiles
+        .join(followers, (p, f) => (p.id === f.profileId))
+        .join(profiles, (p1, f, p2) => (f.followerId === p2.id))
+        .groupBy((p1, f, p2) => ({
+          id: p1.id,
+          gender: p2.gender
+        }))
+        .select((p1, f, p2) => ({
+          id: p1.id,
+          firstName: p1.firstName,
+          lastName: p1.lastName,
+          gender: p2.gender,
+          followers: f.id.count()
+        }))
+      let cmd12 = provider.getCommand(q12.expression)
+      expect(cmd12).toBe('SELECT t0.id AS id, t0.firstName AS firstName, t0.lastName AS lastName, t2.gender AS gender, COUNT(t1.id) AS followers FROM profile AS t0 INNER JOIN follower AS t1 ON (t0.id = t1.profileId) INNER JOIN profile AS t2 ON (t1.followerId = t2.id) WHERE true GROUP BY t0.id, t2.gender')
     })
 
     it('queryable.toArray to return empty array', function (done) {
