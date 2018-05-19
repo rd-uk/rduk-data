@@ -34,7 +34,7 @@ describe('insert stmt generation', function () {
     const ObjectLiteralExpression = require('@rduk/expression/lib/parser/expression/object')
     const PropertyExpression = require('@rduk/expression/lib/parser/expression/property')
     const SourceExpression = require('../../lib/expression/source')
-    const InsertExpression = require('../../lib/sql/expression/insert')
+    const InsertExpression = require('../../lib/expression/insert')
 
     const Translator = require('../../lib/sql/translator/expression')
     const Visitor = require('../../lib/sql/visitor/expression')
@@ -53,5 +53,24 @@ describe('insert stmt generation', function () {
 
     let command = provider.getCommand(expression)
     expect(command).toBe('INSERT INTO users (email, username, password) VALUES (?<email>, ?<username>, ?<password>)')
+  })
+})
+
+describe('insert from schema generation', function () {
+  it('should success', function (done) {
+    const Schema = require('../../lib/sql/schema')
+    const db = new Schema(require('../resources/db.json'))
+
+    let user = new db.User({
+      email: 'k.ung@rduk.fr',
+      firstName: 'Kim',
+      lastName: 'Ung'
+    })
+
+    user.save()
+      .then(result => {
+        expect(result).toBeDefined()
+        done()
+      })
   })
 })

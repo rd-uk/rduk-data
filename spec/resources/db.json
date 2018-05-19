@@ -1,0 +1,26 @@
+{
+  "entities": {
+    "User": {
+      "table": "db_users",
+      "properties": {
+        "id": {
+          "type": "number",
+          "pk": true
+        },
+        "email": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string",
+          "name": "first_name",
+          "nullable": true
+        },
+        "lastName": {
+          "type": "string",
+          "name": "last_name",
+          "nullable": true
+        }
+      }
+    }
+  }
+}

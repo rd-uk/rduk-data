@@ -1,9 +1,0 @@
----
-tables:
-    user:
-        id:
-            primary: true
-            type: number
-        email:
-            type: string
-            nullable: false

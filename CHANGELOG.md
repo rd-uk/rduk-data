@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - update `@rduk/expression` with latest version (0.3.1)
 
-## 0.2.0 - 2018-01-26
+## 0.2.0 - 2018-01-26s
 ### Changed
 - add sql aggregate functions (min, max, avg, sum, count)
 

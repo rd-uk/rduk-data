@@ -26,22 +26,16 @@
 
 'use strict'
 
-const errors = require('@rduk/errors')
-const Base = require('../../lib/query/base')
+describe('select from schema generation', function () {
+  it('should success', function (done) {
+    const Schema = require('../../lib/sql/schema')
+    const db = new Schema(require('../resources/db.json'))
 
-describe('query base class methods', function () {
-  it('should throw errors', function () {
-    let query = new Base()
-    expect(function () {
-      query.execute()
-    }).toThrowError(errors.NotImplementedError)
-
-    expect(function () {
-      console.log(query.InsertExpression)
-    }).toThrowError(errors.NotSupportedError)
-
-    expect(function () {
-      console.log(query.UpdateExpression)
-    }).toThrowError(errors.NotSupportedError)
+    db.User.query()
+      .toArray()
+      .then(users => {
+        expect(users).toBeDefined()
+        done()
+      })
   })
 })

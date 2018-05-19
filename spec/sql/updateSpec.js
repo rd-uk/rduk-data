@@ -36,7 +36,7 @@ describe('update stmt generation', function () {
     const PropertyExpression = require('@rduk/expression/lib/parser/expression/property')
     const SourceExpression = require('../../lib/expression/source')
     const TokenType = require('@rduk/expression/lib/token/type')
-    const UpdateExpression = require('../../lib/sql/expression/update')
+    const UpdateExpression = require('../../lib/expression/update')
 
     const Translator = require('../../lib/sql/translator/expression')
     const Visitor = require('../../lib/sql/visitor/expression')
@@ -66,5 +66,25 @@ describe('update stmt generation', function () {
     expression2.assignments.push(assignment)
     let command2 = provider.getCommand(expression2)
     expect(command2).toBe('UPDATE users AS t0 SET email = ?<email> WHERE true')
+  })
+})
+
+describe('update from schema generation', function () {
+  it('should success', function (done) {
+    const Schema = require('../../lib/sql/schema')
+    const db = new Schema(require('../resources/db.json'))
+
+    let user = new db.User({
+      id: 1,
+      email: 'tech@rduk.fr',
+      lastName: 'UNG',
+      undef: 'ignored'
+    })
+
+    user.save()
+      .then(result => {
+        expect(result).toBeDefined()
+        done()
+      })
   })
 })
