@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 0.3.0 - 2018-05-19
+### Changed
+- add schema generation from JSON file
+
 ## 0.2.2 - 2018-05-18
 ### Changed
 - update `@rduk/expression` with latest version (0.4.0)
