@@ -21,6 +21,22 @@
           "nullable": true
         }
       }
+    },
+    "Link": {
+      "table": "db_links",
+      "properties": {
+        "fk1": {
+          "type": "number",
+          "pk": true
+        },
+        "fk2": {
+          "type": "number",
+          "pk": true
+        },
+        "value": {
+          "type": "string"
+        }
+      }
     }
   }
 }

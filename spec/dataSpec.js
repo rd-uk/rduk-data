@@ -173,7 +173,7 @@ describe('data', function () {
         .toArray({email: 'j.doe@mail.test'})
         .then(result => {
           expect(Array.isArray(result)).toBe(true)
-          expect(result.length).toBe(0)
+          expect(result.length).toBe(1)
           done()
         })
     })

@@ -70,7 +70,7 @@ describe('update stmt generation', function () {
 })
 
 describe('update from schema generation', function () {
-  it('should success', function (done) {
+  it('should success', async function (done) {
     const Schema = require('../../lib/sql/schema')
     const db = new Schema(require('../resources/db.json'))
 
@@ -80,11 +80,17 @@ describe('update from schema generation', function () {
       lastName: 'UNG',
       undef: 'ignored'
     })
+    let updated1 = await user.save()
+    expect(updated1).toBeDefined()
 
-    user.save()
-      .then(result => {
-        expect(result).toBeDefined()
-        done()
-      })
+    let link = new db.Link({
+      fk1: 1,
+      fk2: 1,
+      value: 'test'
+    })
+
+    let updated2 = await link.save()
+    expect(updated2).toBeDefined()
+    done()
   })
 })
