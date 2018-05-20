@@ -43,5 +43,9 @@ describe('query base class methods', function () {
     expect(function () {
       console.log(query.UpdateExpression)
     }).toThrowError(errors.NotSupportedError)
+
+    expect(function () {
+      console.log(query.DeleteExpression)
+    }).toThrowError(errors.NotSupportedError)
   })
 })
