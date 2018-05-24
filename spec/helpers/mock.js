@@ -28,7 +28,7 @@ const BaseDataProvider = require('../../lib/base')
 
 class MockDataProvider extends BaseDataProvider {
   execute (command, parameters) {
-    return Promise.resolve([{id: 1}])
+    return Promise.resolve([{id: 1, fk1: 1, fk2: 1}])
   }
 }
 
