@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - update `@rduk/expression` to latest version (0.5.1)
 - update `@rduk/provider` to latest version (3.1.1)
 - update `coveralls` to latest version (3.0.1)
+- update `jasmine` to latest version (3.1.0)
 - update `standard` to latest version (11.0.1)
 
 ## 0.4.1 - 2018-05-20
