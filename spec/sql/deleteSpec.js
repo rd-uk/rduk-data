@@ -50,10 +50,10 @@ describe('delete stmt generation', function () {
     }).toThrowError(errors.NotSupportedError)
 
     let binary = new BinaryExpression(
-            new PropertyExpression(new NameExpression('user'), 'id'),
-            new PropertyExpression(new NameExpression('this'), 'id'),
-            TokenType.EQEQEQ
-        )
+      new PropertyExpression(new NameExpression('user'), 'id'),
+      new PropertyExpression(new NameExpression('this'), 'id'),
+      TokenType.EQEQEQ
+    )
     let where = new LambdaExpression(binary, [new NameExpression('user')])
     expression.where = where
 

@@ -1,6 +1,6 @@
 {
   "name": "@rduk/data",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Data layer abstraction",
   "engines": {
     "node": ">=8.11.1"
@@ -36,10 +36,10 @@
     "@rduk/provider": "3.0.2"
   },
   "devDependencies": {
-    "coveralls": "3.0.0",
+    "coveralls": "3.0.1",
     "dotenv": "5.0.1",
     "istanbul": "0.4.5",
     "jasmine": "2.9.0",
-    "standard": "10.0.3"
+    "standard": "11.0.1"
   }
 }

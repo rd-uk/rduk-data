@@ -51,10 +51,10 @@ describe('update stmt generation', function () {
 
     let expression1 = new UpdateExpression(new SourceExpression('users'))
     let binary = new BinaryExpression(
-            new PropertyExpression(new NameExpression('user'), 'id'),
-            new PropertyExpression(new NameExpression('this'), 'id'),
-            TokenType.EQEQEQ
-        )
+      new PropertyExpression(new NameExpression('user'), 'id'),
+      new PropertyExpression(new NameExpression('this'), 'id'),
+      TokenType.EQEQEQ
+    )
     let where = new LambdaExpression(binary, [new NameExpression('user')])
     expression1.where = where
     expression1.assignments.push(assignment)
@@ -80,6 +80,7 @@ describe('update from schema generation', function () {
       lastName: 'UNG',
       undef: 'ignored'
     })
+    expect(user.constructor.name).toBe('User')
     let updated1 = await user.save()
     expect(updated1).toBeDefined()
 

@@ -66,20 +66,20 @@ describe('data', function () {
       expect(cmd0).toBe('SELECT * FROM user AS t0  WHERE true LIMIT 10 OFFSET 20')
 
       let q1 = users
-              .filter(u => u.email.toLowerCase() === this.email)
-              .filter(u => (u.age > 25 && u.age <= 30) || (u.age >= 61 && u.age < 66))
+        .filter(u => u.email.toLowerCase() === this.email)
+        .filter(u => (u.age > 25 && u.age <= 30) || (u.age >= 61 && u.age < 66))
       let cmd1 = provider.getCommand(q1.expression, {email: 'j.doe@mail.test'})
       expect(cmd1).toBe('SELECT * FROM user AS t0  WHERE ((true AND (LOWER(t0.email) = ?<email>)) AND (((t0.age > 25) AND (t0.age <= 30)) OR ((t0.age >= 61) AND (t0.age < 66))))')
 
       let q2 = users
-              .filter(u => u.email.toLowerCase() === this.email)
-              .filter(u => u.email.endsWith('@test.com'))
+        .filter(u => u.email.toLowerCase() === this.email)
+        .filter(u => u.email.endsWith('@test.com'))
       let cmd2 = provider.getCommand(q2.expression, {email: 'j.doe@mail.test'})
       expect(cmd2).toBe('SELECT * FROM user AS t0  WHERE ((true AND (LOWER(t0.email) = ?<email>)) AND t0.email LIKE \'%@test.com\')')
 
       let q3 = users
-              .filter(u => u.email.toLowerCase() !== this.email)
-              .skip(0)
+        .filter(u => u.email.toLowerCase() !== this.email)
+        .skip(0)
       let cmd3 = provider.getCommand(q3.expression, {email: 'j.doe@mail.test'})
       expect(cmd3).toBe('SELECT * FROM user AS t0  WHERE (true AND (LOWER(t0.email) != ?<email>))')
 
@@ -94,35 +94,35 @@ describe('data', function () {
       expect(cmd5).toBe('SELECT * FROM user AS t0  WHERE (true AND (LOWER(t0.email) = ?<email>))')
 
       let q6 = users
-              .filter(u => u.email.toLowerCase() === this.email)
-              .filter(u => u.username.toUpperCase().contains('test'))
+        .filter(u => u.email.toLowerCase() === this.email)
+        .filter(u => u.username.toUpperCase().contains('test'))
       let cmd6 = provider.getCommand(q6.expression, {email: 'j.doe@mail.test'})
       expect(cmd6).toBe('SELECT * FROM user AS t0  WHERE ((true AND (LOWER(t0.email) = ?<email>)) AND UPPER(t0.username) LIKE \'%test%\')')
 
       let q7 = users
-              .filter(u => u.email.toLowerCase() === this.email)
-              .filter(u => u.email.toLowerCase().contains(this.host))
-              .filter(u => u.username.toUpperCase().startsWith('test'))
+        .filter(u => u.email.toLowerCase() === this.email)
+        .filter(u => u.email.toLowerCase().contains(this.host))
+        .filter(u => u.username.toUpperCase().startsWith('test'))
       let cmd7 = provider.getCommand(q7.expression, {email: 'j.doe@mail.test', host: 'mail.test'})
       expect(cmd7).toBe('SELECT * FROM user AS t0  WHERE (((true AND (LOWER(t0.email) = ?<email>)) AND LOWER(t0.email) LIKE ?<host>) AND UPPER(t0.username) LIKE \'test%\')')
 
       let q8 = users
-              .join(profiles, (u, p) => (u.id === p.userId))
-              .select((u, p) => ({
-                id: u.id
-              }))
+        .join(profiles, (u, p) => (u.id === p.userId))
+        .select((u, p) => ({
+          id: u.id
+        }))
 
       let cmd8 = provider.getCommand(q8.expression, {email: 'j.doe@mail.test'})
       expect(cmd8).toBe('SELECT t0.id AS id FROM user AS t0 INNER JOIN profile AS t1 ON (t0.id = t1.userId) WHERE true')
 
       let q9 = users
-              .join(profiles, (u, p) => (u.id === p.userId))
-              .select((u, p) => ({
-                id: u.id,
-                email: u.email,
-                firstName: p.firstName,
-                lastName: p.lastName.toUpperCase()
-              }))
+        .join(profiles, (u, p) => (u.id === p.userId))
+        .select((u, p) => ({
+          id: u.id,
+          email: u.email,
+          firstName: p.firstName,
+          lastName: p.lastName.toUpperCase()
+        }))
 
       let cmd9 = provider.getCommand(q9.expression, {email: 'j.doe@mail.test'})
       expect(cmd9).toBe('SELECT t0.id AS id, t0.email AS email, t1.firstName AS firstName, UPPER(t1.lastName) AS lastName FROM user AS t0 INNER JOIN profile AS t1 ON (t0.id = t1.userId) WHERE true')
@@ -181,10 +181,10 @@ describe('data', function () {
     it('queryable orderBy should throw a NotSupportedError', function () {
       expect(function () {
         users
-                  .filter(u => (u.age > 25 && u.age <= 30) || (u.age >= 61 && u.age < 66))
-                  .filter(u => u.email.endsWith('@test.com'))
-                  .orderBy(u => (u.id))
-                  .toArray({email: 'j.doe@mail.test'})
+          .filter(u => (u.age > 25 && u.age <= 30) || (u.age >= 61 && u.age < 66))
+          .filter(u => u.email.endsWith('@test.com'))
+          .orderBy(u => (u.id))
+          .toArray({email: 'j.doe@mail.test'})
       }).toThrowError(errors.NotSupportedError)
     })
   })
