@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 0.4.3 - 2018-07-10
+### Changed
+- update `@rduk/expression` to latest version (0.5.2)
+- update `dotenv` to latest version (6.0.0)
+- `@rduk/configuration` as peer dependency
+- `@rduk/errors` as peer dependency
+- `@rduk/logger` as peer dependency
+- `@rduk/provider` as peer dependency
+
 ## 0.4.2 - 2018-05-29
 ### Changed
 - override Custom Entity constructor name
