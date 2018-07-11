@@ -22,33 +22,38 @@
  * SOFTWARE.
  */
 
+/* eslint-env jasmine */
+
 'use strict'
 
 const errors = require('@rduk/errors')
-const type = require('@rduk/configuration/lib/sections/field/type')
-const BaseProvider = require('@rduk/provider/lib/base')
+const BaseEntity = require('../../lib/sql/schema/entity/base')
 
-function getAbsolute (path) {
-  return `${__dirname}/${path}`
-}
+describe('BaseEntity', function () {
+  const entity = new BaseEntity()
+  describe('method', function () {
+    describe('_create', function () {
+      it('should throw a NotImplementedError', function () {
+        expect(() => {
+          entity._create()
+        }).toThrowError(errors.NotImplementedError)
+      })
+    })
 
-function load (path, defaultPath) {
-  return type.load(path || getAbsolute(defaultPath))
-}
+    describe('_update', function () {
+      it('should throw a NotImplementedError', function () {
+        expect(() => {
+          entity._update()
+        }).toThrowError(errors.NotImplementedError)
+      })
+    })
 
-class BaseDataProvider extends BaseProvider {
-  initialize () {
-    let query = this.section.section.query || {}
-    let visitor = load(query.visitor, 'sql/visitor/expression')
-    let translator = load(query.translator, 'sql/translator/expression')
-    let mixins = load(query.mixins, 'sql/mixins')
-    let QueryProvider = load(query.provider, 'query/default')
-
-    this.query = new QueryProvider(visitor, translator, mixins)
-  }
-  execute (command, parameters) {
-    errors.throwNotImplementedError('execute')
-  }
-}
-
-module.exports = BaseDataProvider
+    describe('_delete', function () {
+      it('should throw a NotImplementedError', function () {
+        expect(() => {
+          entity._delete()
+        }).toThrowError(errors.NotImplementedError)
+      })
+    })
+  })
+})
