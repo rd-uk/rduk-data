@@ -59,7 +59,7 @@ describe('data', function () {
     })
 
     it('sql generation should success', function () {
-      let provider = new QueryProvider(Visitor, Translator)
+      let provider = new QueryProvider(Visitor, Translator, () => ({}))
 
       let q0 = users.skip(20).take(10)
       let cmd0 = provider.getCommand(q0.expression, {})
