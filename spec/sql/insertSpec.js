@@ -67,6 +67,9 @@ describe('insert from schema generation', function () {
       lastName: 'Ung'
     })
 
+    let json = user.toJSON()
+    expect(json).toBeDefined()
+
     user.save()
       .then(result => {
         expect(result).toBeDefined()
