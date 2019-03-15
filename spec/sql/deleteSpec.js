@@ -58,7 +58,7 @@ describe('delete stmt generation', function () {
     expression.where = where
 
     let command = provider.getCommand(expression)
-    expect(command).toBe('DELETE FROM users AS t0 WHERE (t0.id = ?<id>)')
+    expect(command).toBe('DELETE FROM users WHERE (id = ?<id>)')
   })
 })
 
