@@ -46,7 +46,6 @@ describe('data', function () {
     const QueryProvider = require('../lib/query/default')
     const Visitor = require('../lib/sql/visitor/expression')
     const Translator = require('../lib/sql/translator/expression')
-    const errors = require('@rduk/errors')
 
     let users
     let profiles
@@ -61,15 +60,16 @@ describe('data', function () {
     it('sql generation should success', function () {
       let provider = new QueryProvider(Visitor, Translator, () => ({}))
 
-      let q0 = users.skip(20).take(10)
+      let q0 = users.skip(20).take(10).orderBy(u => u.id).orderByDesc(u => u.age)
       let cmd0 = provider.getCommand(q0.expression, {})
-      expect(cmd0).toBe('SELECT * FROM user AS t0  WHERE true LIMIT 10 OFFSET 20')
+      expect(cmd0).toBe('SELECT * FROM user AS t0  WHERE true ORDER BY t0.id ASC, t0.age DESC LIMIT 10 OFFSET 20')
 
       let q1 = users
         .filter(u => u.email.toLowerCase() === this.email)
         .filter(u => (u.age > 25 && u.age <= 30) || (u.age >= 61 && u.age < 66))
+        .orderByDesc(u => u.id)
       let cmd1 = provider.getCommand(q1.expression, {email: 'j.doe@mail.test'})
-      expect(cmd1).toBe('SELECT * FROM user AS t0  WHERE ((true AND (LOWER(t0.email) = ?<email>)) AND (((t0.age > 25) AND (t0.age <= 30)) OR ((t0.age >= 61) AND (t0.age < 66))))')
+      expect(cmd1).toBe('SELECT * FROM user AS t0  WHERE ((true AND (LOWER(t0.email) = ?<email>)) AND (((t0.age > 25) AND (t0.age <= 30)) OR ((t0.age >= 61) AND (t0.age < 66)))) ORDER BY t0.id DESC')
 
       let q2 = users
         .filter(u => u.email.toLowerCase() === this.email)
@@ -177,16 +177,6 @@ describe('data', function () {
           expect(result.length).toBe(1)
           done()
         })
-    })
-
-    it('queryable orderBy should throw a NotSupportedError', function () {
-      expect(function () {
-        users
-          .filter(u => (u.age > 25 && u.age <= 30) || (u.age >= 61 && u.age < 66))
-          .filter(u => u.email.endsWith('@test.com'))
-          .orderBy(u => (u.id))
-          .toArray({email: 'j.doe@mail.test'})
-      }).toThrowError(errors.NotSupportedError)
     })
   })
 

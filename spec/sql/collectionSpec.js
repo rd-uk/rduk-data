@@ -22,21 +22,20 @@
  * SOFTWARE.
  */
 
+/* eslint-env jasmine */
+
 'use strict'
 
-const BaseDataProvider = require('../../lib/base')
+const EntityCollection = require('../../lib/sql/schema/entity/iterable')
 
-class MockDataProvider extends BaseDataProvider {
-  execute (command, parameters) {
-    return Promise.resolve([{
-      id: 1,
-      fk1: 1,
-      fk2: 1,
-      email: 'john.doe@example.com',
-      firstName: 'John',
-      lastName: 'Doe'
-    }])
-  }
-}
-
-module.exports = MockDataProvider
+describe('EntityCollection', function () {
+  const entities = EntityCollection.ofType(Object).create()
+  describe('create', function () {
+    describe('with null coll', function () {
+      it('should create an empty coll', function () {
+        expect(Array.isArray(entities.coll)).toBe(true)
+        expect(entities.coll.length).toBe(0)
+      })
+    })
+  })
+})

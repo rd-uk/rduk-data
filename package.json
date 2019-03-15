@@ -8,7 +8,7 @@
   "main": "lib/index.js",
   "scripts": {
     "pretest": "standard --fix && cp ./spec/resources/*yml .",
-    "test": "istanbul cover jasmine --report cobertura",
+    "test": "RDUK_LOG_LEVEL=info istanbul cover jasmine --report cobertura",
     "posttest": "rm ./*yml",
     "report": "istanbul report",
     "coveralls": "npm run report && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"

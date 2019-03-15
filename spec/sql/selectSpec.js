@@ -28,14 +28,37 @@
 
 describe('select from schema generation', function () {
   it('should success', function (done) {
+    const QueryProvider = require('../../lib/query/default')
+    const Visitor = require('../../lib/sql/visitor/expression')
+    const Translator = require('../../lib/sql/translator/expression')
     const Schema = require('../../lib/sql/schema')
     const db = new Schema(require('../resources/db.json'))
 
-    db.User.query()
-      .toArray()
-      .then(users => {
-        expect(users).toBeDefined()
-        done()
-      })
+    let provider = new QueryProvider(Visitor, Translator, () => ({}))
+    let query = db.User.query().skip(10).take(10)
+
+    let cmd = provider.getCommand(query.expression, {})
+    expect(cmd).toBe('SELECT t0.id AS id, t0.email AS email, t0.firstName AS first_name, t0.lastName AS last_name FROM db_users AS t0  WHERE true LIMIT 10 OFFSET 10')
+
+    Promise.all([
+      query
+        .toIterator()
+        .then(users => {
+          for (let user of users) {
+            expect(user.constructor.name).toBe('User')
+          }
+        }),
+      query
+        .toArray()
+        .then(users => {
+          expect(users.length).toBe(1)
+          expect(users[0].email).toBe('john.doe@example.com')
+          users.forEach(user => {
+            expect(user.constructor.name).toBe('User')
+            let json = user.toJSON()
+            expect(json).toBeDefined()
+          })
+        })
+    ]).then(() => done())
   })
 })
