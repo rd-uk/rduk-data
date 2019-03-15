@@ -34,7 +34,7 @@ const MethodTranslator = require('../../../lib/sql/translator/method')
 describe('MethodTranslator:', function () {
   describe('translating unsupported operator', function () {
     it('should throw a NotSupportedError', function () {
-      let expression = new MethodExpression({context: new ConstantExpression(42)}, 'unsupported', [])
+      let expression = new MethodExpression({ context: new ConstantExpression(42) }, 'unsupported', [])
       let provider = {
         translator: {
           translate: () => 'dummy content'

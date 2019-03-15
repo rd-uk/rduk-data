@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 0.6.0 - 2019-03-15
 - add toIterator method to EntityCollection
 - add orderBy and orderByDesc to queryable
+- update `jasmine` to latest version (3.2.0)
+- update `dotenv` to latest version (6.1.0)
+- update `coveralls` to latest version (3.0.3)
+- update `standard` to latest version (12.0.0)
 
 ## 0.5.4 - 2019-03-15
 ### Changed
