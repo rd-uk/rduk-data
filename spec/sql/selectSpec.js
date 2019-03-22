@@ -38,7 +38,7 @@ describe('select from schema generation', function () {
     let query = db.User.query().skip(10).take(10)
 
     let cmd = provider.getCommand(query.expression, {})
-    expect(cmd).toBe('SELECT t0.id AS id, t0.email AS email, t0.firstName AS first_name, t0.lastName AS last_name FROM db_users AS t0  WHERE true LIMIT 10 OFFSET 10')
+    expect(cmd).toBe('SELECT t0.id AS id, t0.email AS email, t0.first_name AS firstName, t0.last_name AS lastName FROM db_users AS t0  WHERE true LIMIT 10 OFFSET 10')
 
     Promise.all([
       query
