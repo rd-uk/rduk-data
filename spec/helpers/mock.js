@@ -34,7 +34,8 @@ class MockDataProvider extends BaseDataProvider {
       fk2: 1,
       email: 'john.doe@example.com',
       firstName: 'John',
-      lastName: 'Doe'
+      lastName: 'Doe',
+      birthdate: '1970-01-01'
     }])
   }
 }

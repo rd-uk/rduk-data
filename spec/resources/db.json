@@ -20,6 +20,31 @@
           "name": "last_name",
           "nullable": true
         }
+      },
+      "relationship": {
+        "Profile": {
+          "type": "oneToOne",
+          "on": {
+            "id": "userId"
+          }
+        }
+      }
+    },
+    "Profile": {
+      "table": "db_profiles",
+      "properties": {
+        "id": {
+          "type": "number",
+          "pk": true
+        },
+        "userId": {
+          "type": "number",
+          "name": "user_id"
+        },
+        "birthdate": {
+          "type": "Date",
+          "name": "birth_date"
+        }
       }
     },
     "Link": {

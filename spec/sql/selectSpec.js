@@ -35,10 +35,21 @@ describe('select from schema generation', function () {
     const db = new Schema(require('../resources/db.json'))
 
     let provider = new QueryProvider(Visitor, Translator, () => ({}))
-    let query = db.User.query().skip(10).take(10)
+    let query = db.User.query()
+      .join(db.Profile.query(), (u, p) => u.id === p.userId)
+      .filter((u, p) => p.birthdate < '2000-01-01')
+      .select((u, p) => ({
+        id: p.userId,
+        email: u.email,
+        firstName: u.firstName,
+        lastName: u.lastName,
+        birthdate: p.birthdate
+      }))
+      .skip(10)
+      .take(10)
 
     let cmd = provider.getCommand(query.expression, {})
-    expect(cmd).toBe('SELECT t0.id AS id, t0.email AS email, t0.first_name AS firstName, t0.last_name AS lastName FROM db_users AS t0  WHERE true LIMIT 10 OFFSET 10')
+    expect(cmd).toBe('SELECT t1.user_id AS id, t0.email AS email, t0.first_name AS firstName, t0.last_name AS lastName, t1.birth_date AS birthdate FROM db_users AS t0 INNER JOIN db_profiles AS t1 ON (t0.id = t1.user_id) WHERE (true AND (t1.birth_date < \'2000-01-01\')) LIMIT 10 OFFSET 10')
 
     Promise.all([
       query
@@ -53,10 +64,22 @@ describe('select from schema generation', function () {
         .then(users => {
           expect(users.length).toBe(1)
           expect(users[0].email).toBe('john.doe@example.com')
+          expect(users[0].birthdate).toBeUndefined()
+          expect(users[0]._original.birthdate).toBeDefined()
           users.forEach(user => {
             expect(user.constructor.name).toBe('User')
             let json = user.toJSON()
             expect(json).toBeDefined()
+          })
+        }),
+      query
+        .toArray({}, true)
+        .then(users => {
+          expect(users.length).toBe(1)
+          expect(users[0].email).toBe('john.doe@example.com')
+          expect(users[0].birthdate).toBeDefined()
+          users.forEach(user => {
+            expect(user.constructor.name).toBe('Object')
           })
         })
     ]).then(() => done())
